@@ -42,11 +42,14 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
         return res.status(400)
                   .send(`URL is missing: Requrired`);
       }
-      let filteredImage=filterImageFromURL(image_url);
-      await deleteLocalFiles([image_url])
+      let filteredImage=await filterImageFromURL(image_url);
+    
+      res.on('finish', ()=>{
+                deleteLocalFiles([filteredImage]);
+      });
 
-      return res.status(200)
-                .send('File: '+filteredImage)
+      return res.status(200).sendFile(filterImage)
+                
                 
                
   } );
